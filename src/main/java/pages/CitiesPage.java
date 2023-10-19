@@ -46,15 +46,24 @@ public class CitiesPage extends BasicPage {
         WebElement messagePopup = driver.findElement(By.cssSelector(".success .v-snack__content"));
         return messagePopup.getText();
     }
+
     public void searchCityName(String cityName) {
         WebElement cityInputField = driver.findElement(By.cssSelector("#search"));
         cityInputField.sendKeys(cityName);
     }
+
     public void waitForNumberOfRowsInTableToBe(int expectedNumberOfRows) {
         List<WebElement> rows = driver.findElements(By.cssSelector(".v-data-table__wrapper tbody tr"));
         Assert.assertEquals(rows.size(), expectedNumberOfRows);
     }
+
     public void clickOnEditButtonForFirstRow() {
         driver.findElement(By.cssSelector("#edit")).click();
+    }
+
+    public String getFirstRowName() {
+        WebElement firstRow = driver.findElement(By.cssSelector(".v-data-table__wrapper tbody tr:first-child"));
+        WebElement nameElement = firstRow.findElement(By.cssSelector("tbody > tr > td:nth-child(2)"));
+        return nameElement.getText();
     }
 }
