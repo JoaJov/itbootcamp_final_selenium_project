@@ -60,7 +60,7 @@ public class AdminCitiesTests extends BasicTest {
         citiesPage.clickOnCitiesButton();
 
 
-        citiesPage.searchCityName("New York City");
+        citiesPage.searchCityName("Prokuplje City");
 
         citiesPage.waitForNumberOfRowsInTableToBe(1);
 
