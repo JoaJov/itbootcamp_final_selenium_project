@@ -1,18 +1,21 @@
 package tests;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.ITestResult;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
-import pages.LoginPage;
-import pages.MessagePopUpPage;
-import pages.NavPage;
-import pages.SignupPage;
+import pages.*;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.Duration;
 
 public abstract class BasicTest {
@@ -23,6 +26,7 @@ public abstract class BasicTest {
     protected LoginPage loginPage;
     protected SignupPage signupPage;
     protected MessagePopUpPage messagePopUpPage;
+    protected CitiesPage citiesPage;
 
     @BeforeClass
     public void setup() {
@@ -36,6 +40,7 @@ public abstract class BasicTest {
         loginPage = new LoginPage(driver, wait);
         signupPage = new SignupPage(driver, wait);
         messagePopUpPage = new MessagePopUpPage(driver, wait);
+        citiesPage = new CitiesPage(driver, wait);
 
     }
     @BeforeMethod
@@ -43,8 +48,17 @@ public abstract class BasicTest {
         driver.navigate().to(baseUrl);
     }
     @AfterMethod
-    public void afterMethod () {
+    public void afterMethod(ITestResult result) {
         driver.manage().deleteAllCookies();
+
+        if (ITestResult.FAILURE == result.getStatus()) {
+            File screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+            try {
+                FileUtils.copyFile(screenshot, new File("screenshots/" + result.getName() + ".png"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
     @AfterClass
     public void afterClass(){
